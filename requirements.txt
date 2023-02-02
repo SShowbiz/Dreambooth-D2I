@@ -1,4 +1,5 @@
 accelerate==0.16.0
+bitsandbytes-cuda113==0.26.0.post2
 certifi
 charset-normalizer==3.0.1
 diffusers==0.12.1
