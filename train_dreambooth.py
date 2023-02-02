@@ -534,6 +534,7 @@ def main(args):
                 if "epoch_*" not in gitignore:
                     gitignore.write("epoch_*\n")
         elif args.output_dir is not None:
+            print(args.output_dir)
             os.makedirs(args.output_dir, exist_ok=True)
 
     # Load the tokenizer
