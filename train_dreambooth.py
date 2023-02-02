@@ -534,7 +534,6 @@ def main(args):
                 if "epoch_*" not in gitignore:
                     gitignore.write("epoch_*\n")
         elif args.output_dir is not None:
-            print(args.output_dir)
             os.makedirs(args.output_dir, exist_ok=True)
 
     # Load the tokenizer
@@ -621,8 +620,8 @@ def main(args):
 
     noise_scheduler = DDPMScheduler.from_pretrained(args.pretrained_model_name_or_path, subfolder="scheduler")
 
-    # vae_scale_factor = create_depth_images([args.instance_data_dir, args.class_data_dir], args.pretrained_model_name_or_path, accelerator, unet, text_encoder)
-    vae_scale_factor = 8
+    vae_scale_factor = create_depth_images([args.instance_data_dir, args.class_data_dir], args.pretrained_model_name_or_path, accelerator, unet, text_encoder)
+    
     train_dataset = DreamBoothDataset(
         instance_data_root=args.instance_data_dir,
         instance_prompt=args.instance_prompt,
