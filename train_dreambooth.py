@@ -620,7 +620,14 @@ def main(args):
 
     noise_scheduler = DDPMScheduler.from_pretrained(args.pretrained_model_name_or_path, subfolder="scheduler")
 
-    vae_scale_factor = create_depth_images([args.instance_data_dir, args.class_data_dir], args.pretrained_model_name_or_path, accelerator, unet, text_encoder)
+    paths = [args.instance_data_dir, args.class_data_dir] if args.with_prior_preservation else [args.instance_data_dir]
+    vae_scale_factor = create_depth_images(
+        paths,
+        args.pretrained_model_name_or_path,
+        accelerator,
+        unet,
+        text_encoder,
+    )
     
     train_dataset = DreamBoothDataset(
         instance_data_root=args.instance_data_dir,
