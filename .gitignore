@@ -189,6 +189,9 @@ poetry.toml
 .history
 .ionide
 
+# checkpoints
+checkpoints/
+
 # images
 *.jpg
 *.png
