@@ -13,15 +13,13 @@ def image_grid(imgs, rows, cols):
     assert len(imgs) == rows*cols
 
     w, h = imgs[0].size
-    grid = Image.new('RGB', size=(cols*w, rows*h))
-    grid_w, grid_h = grid.size
-    
+    grid = Image.new('RGB', size=(cols*w, rows*h))    
     for i, img in enumerate(imgs):
         grid.paste(img, box=(i%cols*w, i//cols*h))
     return grid
 
 if __name__ == "__main__":
-    source = os.listdir(args.source_dir)[90:100]
+    source = os.listdir(args.source_dir)
 
     grid = Image.new('RGB', size=(3*SIZE, len(source)*SIZE))
     for idx, image_dir in enumerate(tqdm(source)):
@@ -32,4 +30,5 @@ if __name__ == "__main__":
         images = [input_img, depthmap_img, output_img]
         for i, img in enumerate(images):
             grid.paste(img, box=(i*SIZE, idx*SIZE))
-    grid.save('grid10.png')
+
+    grid.save('grid.png')
