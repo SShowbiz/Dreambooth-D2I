@@ -54,13 +54,15 @@ class DreamBooth:
 
         return depthmap
 
-    def save_images(self, subdir, input_img, depthmap_img, output_img, output_only=False):
-        save_dir = self.save_dir if output_only else os.path.join(self.save_dir, subdir) 
+    def save_images(self, image_name, input_img, depthmap_img, output_img, output_only=False):
+        save_dir = self.save_dir if output_only else os.path.join(self.save_dir, image_name) 
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
 
-        output_img.save(os.path.join(save_dir, "output.png"))
-        if not output_only:
+        if output_only:
+            output_img.save(os.path.join(save_dir, f"{image_name}.png"))
+        else:
+            output_img.save(os.path.join(save_dir, "output.png"))
             self.to_pil(input_img[0]).save(os.path.join(save_dir, "input.png"))
             self.to_pil(depthmap_img).save(os.path.join(save_dir, "depthmap.png"))
         
@@ -84,7 +86,7 @@ class DreamBooth:
             )[0][0]
                 
             self.save_images(
-                subdir=image_name,
+                image_name=image_name,
                 input_img=image,
                 depthmap_img=depthmap,
                 output_img=output,
