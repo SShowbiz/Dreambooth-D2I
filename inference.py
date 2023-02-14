@@ -75,7 +75,8 @@ class DreamBooth:
             generator = torch.Generator(device="cuda")
             generator.manual_seed(args.seed)
 
-            depthmap = self.create_depthmap(image)
+            # depthmap = self.create_depthmap(image)
+            image = transforms.ToPILImage()(image[0])
             output = self.pipeline(
                 prompt=self.positive_prompt,
                 image=image,
@@ -89,7 +90,7 @@ class DreamBooth:
             self.save_images(
                 image_name=image_name,
                 input_img=image,
-                depthmap_img=depthmap,
+                depthmap_img=None,
                 output_img=output,
                 output_only=output_only
             )
