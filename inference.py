@@ -38,8 +38,6 @@ class DreamBooth:
         self.negative_prompt = args.negative_prompt
         self.source_dir = args.source_dir
         self.save_dir = args.save_dir
-        self.generator = torch.Generator(device="cuda")
-        self.generator.manual_seed(args.seed)
 
     def preprocess(self, image):
         image = self.transform(image)[None, :, :, :].to("cuda")
@@ -74,6 +72,9 @@ class DreamBooth:
             image_name = image.split(".")[0]
             image = self.preprocess(Image.open(image_path))
 
+            generator = torch.Generator(device="cuda")
+            generator.manual_seed(args.seed)
+
             depthmap = self.create_depthmap(image)
             output = self.pipeline(
                 prompt=self.positive_prompt,
@@ -82,7 +83,7 @@ class DreamBooth:
                 strength=0.8,
                 num_inference_steps=200,
                 guidance_scale=7,
-                generator=self.generator,
+                generator=generator,
             )[0][0]
                 
             self.save_images(
