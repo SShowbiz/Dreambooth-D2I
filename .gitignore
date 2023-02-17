@@ -196,4 +196,7 @@ checkpoints/
 *.jpg
 *.png
 
+# numpy
+*.npy
+
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
