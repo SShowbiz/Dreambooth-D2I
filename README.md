@@ -2,6 +2,12 @@
 
 This repository is for fine-tuning Dreambooth-Depth2Img which is originally suggested in [stabilityai/stable-diffusion-2-depth](https://huggingface.co/stabilityai/stable-diffusion-2-depth).
 
+This repository is implemented based on other repositories.
+
+1. [epitaque/dreambooth_depth2img](https://github.com/epitaque/dreambooth_depth2img)
+2. [isl-org/MiDaS](https://github.com/isl-org/MiDaS)
+3. [zllrunning/face-parsing.PyTorch](https://github.com/zllrunning/face-parsing.PyTorch)
+
 ## Depthmap Generation
 
 ### Monocular Depth Estimation
@@ -105,4 +111,16 @@ $ python inference.py  \
 --positive_prompt ${POSITIVE_PROMPT} \
 --negative_prompt ${NEGATIVE_PROMPT} \
 --output_only
+```
+
+
+## (Optional) Create Truncated FFHQ
+
+If you want to transfer FFHQ data, I recommend to use gaussian-truncated version of generated FFHQ.
+You can download pretrained model in [here](https://nvlabs-fi-cdn.nvidia.com/stylegan2/networks/) and convert it into .pt format using [this](https://github.com/rosinality/stylegan2-pytorch#convert-weight-from-official-checkpoints) method. 
+Put the converted .pt file into position such as `ffhq/pretrain_models/stylegan2-ffhq-config-f.pt`.
+
+```shell
+$ cd ffhq
+$ python create_ffhq.py --num ${NUM_TO_GENERATE} --model_path ${PRETRAINED_MODEL_PATH} --output_path ${IMAGE_SAVE_DIR}
 ```
