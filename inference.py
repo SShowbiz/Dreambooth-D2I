@@ -32,7 +32,7 @@ class DreamBooth:
             "cuda"
         )
         self.transform = transforms.Compose(
-            [transforms.Resize((384, 384)), transforms.ToTensor()]
+            [transforms.Resize((512, 512)), transforms.ToTensor()]
         )
         self.to_pil = transforms.ToPILImage()
         self.positive_prompt = args.positive_prompt
