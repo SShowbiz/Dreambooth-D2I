@@ -9,6 +9,7 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument("--ckpt", default="checkpoints/output", type=str, help="image source directory")
 parser.add_argument("--source_dir", default="ffhq", type=str, help="image source directory")
+parser.add_argument("--depthmap_dir", default=None, type=str, help="depthmap directory")
 parser.add_argument("--save_dir", default="results", type=str, help="image save directory")
 parser.add_argument("--seed", default=0, type=int, help="seed for random generator")
 parser.add_argument(
@@ -45,11 +46,6 @@ class DreamBooth:
 
     def create_depthmap(self, image):
         depthmap = self.pipeline.depth_estimator(image).predicted_depth
-        depth_min = torch.amin(depthmap, dim=[0, 1, 2], keepdim=True)
-        depth_max = torch.amax(depthmap, dim=[0, 1, 2], keepdim=True)
-        depthmap = 2.0 * (depthmap - depth_min) / (depth_max - depth_min) - 1.0
-        depthmap = depthmap[0, :, :]
-
         return depthmap
 
     def save_images(self, image_name, input_img, depthmap_img, output_img, output_only=False):
@@ -70,12 +66,17 @@ class DreamBooth:
         for image in images:
             image_path = os.path.join(self.source_dir, image)
             image_name = image.split(".")[0]
+
             image = self.preprocess(Image.open(image_path))
+            if self.depthmap_dir is not None:
+                depthmap_path = os.path.join(self.depthmap_dir, image)
+                depthmap = self.preprocess(Image.open(depthmap_path))
+            else:
+                depthmap = self.create_depthmap(image)
 
             generator = torch.Generator(device="cuda")
             generator.manual_seed(args.seed)
-
-            # depthmap = self.create_depthmap(image)
+            
             image = transforms.ToPILImage()(image[0])
             output = self.pipeline(
                 prompt=self.positive_prompt,
@@ -85,12 +86,13 @@ class DreamBooth:
                 num_inference_steps=200,
                 guidance_scale=7,
                 generator=generator,
+                depth_map=depthmap
             )[0][0]
                 
             self.save_images(
                 image_name=image_name,
                 input_img=image,
-                depthmap_img=None,
+                depthmap_img=depthmap,
                 output_img=output,
                 output_only=output_only
             )
