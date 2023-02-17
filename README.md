@@ -37,9 +37,9 @@ $ cd depth/depth/edge
 $ python estimate_edge.py --input_path ${SOURCE_DIR} --output_path ${EDGE_DIR}
 ```
 
-### Face Parsing
+### (Optional) Face Parsing
 
-To add face parsing information to depthmap and generate final depth image, you can use below command.
+If you are using facial data for training, you can add face parsing information to depthmap and generate final depth image.
 
 ```shell
 $ python edit_depth.py --input_path ${SOURCE_DIR} --depth_path ${DEPTH_DIR} --edge_path ${EDGE_DIR} --output_path ${FINAL_DEPTH_DIR}
