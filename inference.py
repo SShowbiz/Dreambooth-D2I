@@ -37,6 +37,7 @@ class DreamBooth:
         self.to_pil = transforms.ToPILImage()
         self.positive_prompt = args.positive_prompt
         self.negative_prompt = args.negative_prompt
+        self.depthmap_dir = args.depthmap_dir
         self.source_dir = args.source_dir
         self.save_dir = args.save_dir
 
@@ -67,12 +68,18 @@ class DreamBooth:
             image_path = os.path.join(self.source_dir, image)
             image_name = image.split(".")[0]
 
-            image = self.preprocess(Image.open(image_path))
             if self.depthmap_dir is not None:
                 depthmap_path = os.path.join(self.depthmap_dir, image)
                 depthmap = self.preprocess(Image.open(depthmap_path))
+                image = self.preprocess(Image.open(image_path))
             else:
+                image = self.preprocess(Image.open(image_path))
                 depthmap = self.create_depthmap(image)
+
+            # remove alpha channel if exists
+            N, C, *_ = depth_map.shape
+            if N == C == 1:
+                depth_map = depth_map.squeeze(0)
 
             generator = torch.Generator(device="cuda")
             generator.manual_seed(args.seed)
@@ -85,8 +92,8 @@ class DreamBooth:
                 strength=0.8,
                 num_inference_steps=200,
                 guidance_scale=7,
+                depth_map=depthmap,
                 generator=generator,
-                depth_map=depthmap
             )[0][0]
                 
             self.save_images(
