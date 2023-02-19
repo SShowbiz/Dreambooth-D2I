@@ -20,7 +20,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--negative_prompt",
-    default="NSFW, poorly drawn, text, text balloon, bad anatomy, bad proportions, bad face, bad hands, bad body, worst quality, low quality, normal quality, blurry, artifact",
+    default="NSFW, poorly drawn, text, text balloon, bad anatomy, bad proportions, bad face, bad hands, bad body, worst quality, low quality, normal quality, blurry, artifact, white hair",
 )
 parser.add_argument("--output_only", action="store_true")
 args = parser.parse_args()
@@ -77,9 +77,9 @@ class DreamBooth:
                 depthmap = self.create_depthmap(image)
 
             # remove alpha channel if exists
-            N, C, *_ = depth_map.shape
+            N, C, *_ = depthmap.shape
             if N == C == 1:
-                depth_map = depth_map.squeeze(0)
+                depthmap = depthmap.squeeze(0)
 
             generator = torch.Generator(device="cuda")
             generator.manual_seed(args.seed)
