@@ -17,5 +17,5 @@ if __name__ == "__main__":
         save_path = os.path.join(args.output_path, image_name)
         image = cv2.imread(image_path)
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        edge = cv2.Canny(gray_image, 50, 150)
+        edge = cv2.Canny(gray_image, 100, 200)
         cv2.imwrite(save_path, edge)
